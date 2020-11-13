@@ -1,0 +1,55 @@
+
+game.png
+size: 512,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bush
+  rotate: false
+  xy: 100, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ground
+  rotate: false
+  xy: 134, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 2, 2
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 168, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sand
+  rotate: false
+  xy: 202, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+wall
+  rotate: false
+  xy: 236, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+water
+  rotate: false
+  xy: 270, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
