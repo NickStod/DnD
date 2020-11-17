@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.mygdx.game.Resources;
 
 public class Player extends Sprite {
+
     private int fieldX;
     private int fieldY;
 
@@ -12,6 +13,7 @@ public class Player extends Sprite {
         fieldY = fy;
         set(res.player);
     }
+
 
     public int getFieldX() {
         return fieldX;

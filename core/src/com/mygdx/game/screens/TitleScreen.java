@@ -57,7 +57,6 @@ public class TitleScreen extends DefaultScreen implements Screen, InputProcessor
         super.dispose();
         titleStage.dispose();
         batch.dispose();
-        Gdx.input.setInputProcessor(null);
     }
 
     public void resize(int w, int h) {

@@ -7,11 +7,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.graph.Background;
 import com.mygdx.game.logic.GameLogic;
@@ -26,12 +29,9 @@ public class PlaceHolderGameScreen extends DefaultScreen implements Screen, Inpu
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
-
-
-
-    //Dimensions
-    public final int STAGE_W = 192;
-    public final int STAGE_H = 128;
+    MapObjects objects;
+    TiledMapTileLayer collisionLayer;
+    int objectLayerId = 3;
 
     //Imagery variables
     Background bg;
@@ -45,6 +45,10 @@ public class PlaceHolderGameScreen extends DefaultScreen implements Screen, Inpu
         gameLogic = new GameLogic(game);
         player = gameLogic.getPlayer();
         Gdx.input.setInputProcessor(this);
+    }
+
+    public void init() {
+        initMapMaterials();
     }
 
     public void render(float delta) {
@@ -88,18 +92,20 @@ public class PlaceHolderGameScreen extends DefaultScreen implements Screen, Inpu
 
     public void show() {
         float unitScale = 1/ 4f;
-        map = new TmxMapLoader().load("maps/tileMap1.tmx");
+        map = new TmxMapLoader().load("maps/testMap.tmx");
 
         renderer = new OrthogonalTiledMapRenderer(map, unitScale);
 
         camera = new OrthographicCamera();
     }
 
+    //Gets the width of the tilemap.
     public int getMapWidth() {
         TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
         return layer.getTileWidth() * layer.getWidth();
     }
 
+    //Gets the height of the tilemap.
     public int getMapHeight() {
         TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
         return layer.getTileHeight() * layer.getHeight();
@@ -114,13 +120,29 @@ public class PlaceHolderGameScreen extends DefaultScreen implements Screen, Inpu
         map.dispose();
         renderer.dispose();
         batch.dispose();
-        Gdx.input.setInputProcessor(null);
     }
 
+    public void initMapMaterials() {
+        collisionLayer = (TiledMapTileLayer)map.getLayers().get(objectLayerId);
+        objects = collisionLayer.getObjects();
+        //RectangleMapObject[] rectangleObject = new RectangleMapObject[objects.getCount()];
+    }
+
+    //Checks the dimensions
     public void AttemptMove(int dx, int dy) {
         if (gameLogic.CheckMove(player.getX() + dx, player.getY() + dy, getMapWidth(), getMapHeight())) {
             gameLogic.AssignPlayerPosition(player.getX() + dx, player.getY() + dy);
             camera.position.set(player.getX(), player.getY(), 0);
+        }
+        else {
+            for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
+
+                Rectangle rectangle = rectangleObject.getRectangle();
+                if (Intersector.overlaps(rectangle, player.getBoundingRectangle())) {
+                    gameLogic.AssignPlayerPosition(player.getX(), player.getY());
+                    camera.position.set(player.getX(), player.getY(), 0);
+                }
+            }
         }
     }
 
@@ -148,7 +170,6 @@ public class PlaceHolderGameScreen extends DefaultScreen implements Screen, Inpu
                 break;
             case Input.Keys.BACKSPACE:
                 game.setScreen(new MenuScreen(game));
-                dispose();
                 break;
             default:
                 break;
@@ -168,10 +189,7 @@ public class PlaceHolderGameScreen extends DefaultScreen implements Screen, Inpu
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 clickCoordinates = new Vector3(screenX, screenY, 0);
-        Vector3 position = camera.unproject(clickCoordinates);
-        player.setPosition(position.x, position.y);
-        return true;
+        return false;
     }
 
     @Override

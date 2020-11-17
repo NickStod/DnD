@@ -70,7 +70,6 @@ public class MenuScreen extends DefaultScreen implements Screen, InputProcessor 
         super.dispose();
         menuStage.dispose();
         batch.dispose();
-        Gdx.input.setInputProcessor(null);
     }
 
     private void update(float delta) {
@@ -86,7 +85,6 @@ public class MenuScreen extends DefaultScreen implements Screen, InputProcessor 
                 break;
             case Input.Keys.BACKSPACE:
                 game.setScreen(new TitleScreen(game));
-                dispose();
                 break;
             case Input.Keys.ENTER:
                 game.setScreen(new PlaceHolderGameScreen(game));

@@ -13,8 +13,11 @@ public class GameLogic {
 
     public GameLogic(MyGdxGame _game) {
         game = _game;
+
         stageWidth = 32;
+
         stageHeight = 32;
+
         player = new Player(stageWidth, stageHeight, game.res);
     }
 
